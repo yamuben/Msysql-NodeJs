@@ -1,0 +1,43 @@
+{
+  "name": "hepay_merge",
+  "version": "0.1.0",
+  "description": "this app is for merging localhost DB to online Hosted DB",
+  "main": "index.js",
+  "scripts": {
+    "dev-start": " nodemon --exec babel-node ./server/server.js",
+    "prod-start": "SET NODE_ENV=production & nodemon --exec babel-node ./server/server.js",
+    "start": "  babel-node ./server/server.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yamuben/Msysql-NodeJs.git"
+  },
+  "author": "yamu & Fab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yamuben/Msysql-NodeJs/issues"
+  },
+  "homepage": "https://github.com/yamuben/Msysql-NodeJs#readme",
+  "dependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "axios": "^0.19.2",
+    "babel-node": "0.0.1-security",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "mysql-events": "0.0.11",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.9",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0"
+  }
+}
