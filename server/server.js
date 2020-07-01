@@ -16,7 +16,7 @@ export const connection = mysql.createConnection({
     host:'localhost',
     user:'root',
     password:'',
-    database:'hepaytest'
+    database:'hepayfinal'
 }).connect((err)=> {
 if(!err){
     console.log('DB connection succeded');
