@@ -28,13 +28,13 @@ const program = async (req,res,next) => {
         expression: 'hepayfinal.*',
         statement: MySQLEvents.STATEMENTS.ALL,
         onEvent: async (event) => { // You will receive the events here
-            // console.log(event);
+            console.log(event.affectedRows[0].after);
             //event of inserting userdata into MongoDb
-            if(event.type ==='INSERT'){
+            if((event.type ==='INSERT' || event.type==='UPDATE') && event.table === 'userinfos'){
                  let id = event.affectedRows[0].after.userId;
                 // console.log('.......................\n' + id);
      
-                const res = await userController.getOne(id);
+                const res = await userController.getOne(id,event.type);
                     console.log(res.data);
                     console.log(res.response.data);
          

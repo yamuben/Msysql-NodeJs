@@ -35,7 +35,7 @@ console.log(rows)
 
 });
 
-export const getOne = async (id) => {
+export const getOne = async (id,eventType) => {
     // let Id = req.params.id;
     let Id = id;
     console.log('>>>>>>>>>>'+Id);
@@ -84,6 +84,9 @@ export const getOne = async (id) => {
     }
     // 'x_auth_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjVlZGJmOTU0YmQxMTViMDc2ODU5NTU1YSIsImVtYWlsIjoieWFtdWJiZW5qYW1pbkBnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vaGF6YXRlY2gtbHRkL2ltYWdlL3VwbG9hZC92MTU5MTQ0MTI2MS9kb3dubG9hZF95aGpoNmUucG5nIiwicm9sZSI6IkFkbWluIiwidXNlck5hbWVzIjoibXByb21lc3NlIn0sImlhdCI6MTU5MjQzMTI1MywiZXhwIjoxNTkyNTE3NjUzfQ.1fvdX8tCaUlbaxrhn-pp37dcrQ2b9RC0Du4cZoJP5hs'
     //  console.log(data);
+
+
+    if(eventType === 'INSERT'){
     try {
         const response = await axios({
             method: 'POST',
@@ -94,6 +97,19 @@ export const getOne = async (id) => {
         return response;
     } catch (error) {
         return error;
+    }}
+    else if (eventType === 'UPDATE'){
+        try {
+            const response = await axios({
+                method: 'PATCH',
+                url: 'https://hospitalepay.herokuapp.com/api/v1/users/change-patient-infos',
+                data
+            })
+
+            return response;
+        } catch (error) {
+            return error;
+        }   
     }
     // console.log(response.message)
 
