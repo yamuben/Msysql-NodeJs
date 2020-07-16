@@ -5,7 +5,9 @@ import globalErrorHandler from "./controller/errorController";
 import * as userController from "./controller/userController";
 import axios from "axios";
 import MySQLEvents from "@rodrigogs/mysql-events"; 
+// import * as checknet from "./controller/checknet";
 
+// console.log(checknet.isInternetAvailable());
 const App = express();
 App.use(bodyparser.json());
 
@@ -28,7 +30,7 @@ const program = async (req,res,next) => {
         expression: 'hepayfinal.*',
         statement: MySQLEvents.STATEMENTS.ALL,
         onEvent: async (event) => { // You will receive the events here
-            console.log(event.affectedRows[0].after);
+            // console.log(event.affectedRows[0].after);
             //event of inserting userdata into MongoDb
             if((event.type ==='INSERT' || event.type==='UPDATE') && event.table === 'userinfos'){
                  let id = event.affectedRows[0].after.userId;
@@ -38,6 +40,19 @@ const program = async (req,res,next) => {
                     console.log(res.data);
                     console.log(res.response.data);
          
+            }
+            else if ((event.type === 'INSERT' || event.type === 'UPDATE') && event.table==='allservice'){
+
+                let grpId = event.affectedRows[0].after.groupId;
+                let userId = event.affectedRows[0].after.userId;
+                let serviceName = event.affectedRows[0].after.serviceName;
+                console.log('*****************************\n');
+                // for (i=0;i<2;i++)
+                console.log(event.affectedRows[0].after);
+                await userController.getservice(grpId,userId,serviceName ,event.type);
+                // console.log(res.data);
+                // console.log(res.response.data);
+
             }
         },
     });

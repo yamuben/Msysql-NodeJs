@@ -6,6 +6,7 @@ import catchAsyncErr from "./../utils/catchAsyncError";
 import globalErrorHandler from "./errorController";
 import axios from "axios";
 import util from "util";
+import isOnline from "is-online";
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -35,10 +36,10 @@ console.log(rows)
 
 });
 
-export const getOne = async (id,eventType) => {
+export const getOne = async (id, eventType) => {
     // let Id = req.params.id;
     let Id = id;
-    console.log('>>>>>>>>>>'+Id);
+    console.log('>>>>>' + Id);
     const msql = "SELECT * FROM userinfos WHERE userId=?";
     const query = util.promisify(connection.query).bind(connection);
 
@@ -64,6 +65,7 @@ export const getOne = async (id,eventType) => {
     const data = {
         clientName: 'Masaka Hospital',
         userId: userId,
+        clientId: ['5ec5db0362a8905f2086cbbf'],
         userName:
         {
             firstName: firstName,
@@ -82,23 +84,22 @@ export const getOne = async (id,eventType) => {
         userPhone: userPhone,
         userEmail: userEmail
     }
-    // 'x_auth_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjVlZGJmOTU0YmQxMTViMDc2ODU5NTU1YSIsImVtYWlsIjoieWFtdWJiZW5qYW1pbkBnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vaGF6YXRlY2gtbHRkL2ltYWdlL3VwbG9hZC92MTU5MTQ0MTI2MS9kb3dubG9hZF95aGpoNmUucG5nIiwicm9sZSI6IkFkbWluIiwidXNlck5hbWVzIjoibXByb21lc3NlIn0sImlhdCI6MTU5MjQzMTI1MywiZXhwIjoxNTkyNTE3NjUzfQ.1fvdX8tCaUlbaxrhn-pp37dcrQ2b9RC0Du4cZoJP5hs'
-    //  console.log(data);
+    console.log(checknet.isInternetAvailable());
 
+    if (eventType === 'INSERT') {
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: 'https://hospitalepay.herokuapp.com/api/v1/users',
+                data
+            })
 
-    if(eventType === 'INSERT'){
-    try {
-        const response = await axios({
-            method: 'POST',
-            url: 'https://hospitalepay.herokuapp.com/api/v1/users',
-            data
-        })
-
-        return response;
-    } catch (error) {
-        return error;
-    }}
-    else if (eventType === 'UPDATE'){
+            return response;
+        } catch (error) {
+            return error;
+        }
+    }
+    else if (eventType === 'UPDATE') {
         try {
             const response = await axios({
                 method: 'PATCH',
@@ -109,10 +110,77 @@ export const getOne = async (id,eventType) => {
             return response;
         } catch (error) {
             return error;
-        }   
+        }
     }
     // console.log(response.message)
 
 
+
+};
+
+export const getservice = async (grpId, user, serviceN, eventType) => {
+    // let Id = req.params.id;
+    // let Id = id;
+    // console.log('>>>>>' + Id);
+    const msql = "SELECT * FROM allservice WHERE groupId=? AND userId=? ";
+    const query = util.promisify(connection.query).bind(connection);
+
+    const rows = await query(msql, [grpId,user,serviceN]);
+    await rows.forEach(async(element) => {
+
+        // console.log("<><><><><><><><<<<" + element) ;
+    
+
+    let {
+        groupId,
+        groupName,
+        userId,
+        serviceName,
+        quantity,
+        pricePerUnit3,
+        servicePatment } = element;
+        // console.log(userId)
+    const headers = {
+        'Content-Type': 'application/json',
+    }
+    const data = {
+        serviceGrpName: groupName,
+        groupId: groupId,
+        userId: userId,
+        service:
+        {
+            serviceName: serviceName,
+            quantity: quantity,
+            pricePUnit: pricePerUnit3,
+            servicePayment: servicePatment
+        }
+    }
+if (await isOnline()){
+
+    if (eventType === 'INSERT') {
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: 'https://hospitalepay.herokuapp.com/api/v1/serviceGroup',
+                data
+            })
+
+            console.log(response.data);
+        } catch (error) {
+
+
+
+        }
+    }
+
+}else{
+    console.log('.,.,.,.,. No Internet Connect')
+}
+
+
+
+
+
+    });
 
 };
