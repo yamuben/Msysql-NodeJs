@@ -36,6 +36,14 @@ console.log(rows)
 
 });
 
+export const retreiveData = async(req,res,next)=>{
+
+console.log(req.body);
+res.status(200).json({
+    status:"success done well"
+});
+}
+
 export const getOne = async (id, eventType) => {
     // let Id = req.params.id;
     let Id = id;
@@ -84,7 +92,6 @@ export const getOne = async (id, eventType) => {
         userPhone: userPhone,
         userEmail: userEmail
     }
-    console.log(checknet.isInternetAvailable());
 
     if (eventType === 'INSERT') {
         try {
@@ -168,13 +175,13 @@ if (await isOnline()){
             console.log(response.data);
         } catch (error) {
 
-
+            console.log(error);
 
         }
     }
 
 }else{
-    console.log('.,.,.,.,. No Internet Connect')
+    console.log('!!. No Internet Connect')
 }
 
 

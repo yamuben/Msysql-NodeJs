@@ -4,7 +4,8 @@ import bodyparser from "body-parser";
 import globalErrorHandler from "./controller/errorController";
 import * as userController from "./controller/userController";
 import axios from "axios";
-import MySQLEvents from "@rodrigogs/mysql-events"; 
+import MySQLEvents from "@rodrigogs/mysql-events";
+import isOnline from "is-online";
 // import * as checknet from "./controller/checknet";
 
 // console.log(checknet.isInternetAvailable());
@@ -62,11 +63,17 @@ const program = async (req,res,next) => {
 };
 
 program()
-    .then(() => console.log('Waiting for database events...'))
+    .then(async() => {
+        if(await isOnline())
+        console.log('Internet available..\n');
+        else
+        console.log('No Internet Available..\n');
+        console.log('Waiting for database events...')})
     .catch(console.error);
 App.get('/hepay/v1/getusers', userController.getAll);
 
 App.get('/hepay/v1/getoneuser/:id', userController.getOne);
+App.post('/user/',userController.retreiveData);
 
 App.use(globalErrorHandler);
 export default App;
