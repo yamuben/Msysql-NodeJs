@@ -35,6 +35,7 @@
     "is-online": "^8.4.0",
     "mysql": "^2.18.1",
     "mysql-events": "0.0.11",
+    "ngrok": "^3.4.0",
     "nodemon": "^2.0.4"
   },
   "devDependencies": {
