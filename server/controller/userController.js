@@ -11,7 +11,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'hepaytest'
+    database: 'hepayfinal'
 });
 
 const App = express();
@@ -30,18 +30,20 @@ export const getAll = catchAsyncErr(async (req, res, next) => {
             result: rows
 
         });
-
+console.log(rows)
     });
 
 });
 
-export const getOne = catchAsyncErr(async (req, res, next) => {
-let id = req.params.id;
+export const getOne = async (id,eventType) => {
+    // let Id = req.params.id;
+    let Id = id;
+    console.log('>>>>>>>>>>'+Id);
     const msql = "SELECT * FROM userinfos WHERE userId=?";
     const query = util.promisify(connection.query).bind(connection);
 
-    const rows= await query(msql,[id] );
-    
+    const rows = await query(msql, [Id]);
+
 
     let {
         userId,
@@ -70,7 +72,7 @@ let id = req.params.id;
         },
 
         userNationalId: userNationalId,
-        userInsurance: "mutieli",
+        userInsurance: userInsurance,
         userLocation:
         {
             province: province,
@@ -82,27 +84,35 @@ let id = req.params.id;
     }
     // 'x_auth_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7Il9pZCI6IjVlZGJmOTU0YmQxMTViMDc2ODU5NTU1YSIsImVtYWlsIjoieWFtdWJiZW5qYW1pbkBnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vaGF6YXRlY2gtbHRkL2ltYWdlL3VwbG9hZC92MTU5MTQ0MTI2MS9kb3dubG9hZF95aGpoNmUucG5nIiwicm9sZSI6IkFkbWluIiwidXNlck5hbWVzIjoibXByb21lc3NlIn0sImlhdCI6MTU5MjQzMTI1MywiZXhwIjoxNTkyNTE3NjUzfQ.1fvdX8tCaUlbaxrhn-pp37dcrQ2b9RC0Du4cZoJP5hs'
     //  console.log(data);
-try {
-    const response = await axios({
-        method: 'POST',
-        url: 'http://rwandahepay.com/api/v1/users',
-        data
-    })
-
-    res.status(200).json({
-        status: "success",
-        result: response.data
-
-    });
-} catch (error) {
-    res.status(400).json({
-        status: "fail",
-        message: error.response.data.message 
-
-    });
-}   
-// console.log(response.message)
 
 
-    
-});
+    if(eventType === 'INSERT'){
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: 'https://hospitalepay.herokuapp.com/api/v1/users',
+            data
+        })
+
+        return response;
+    } catch (error) {
+        return error;
+    }}
+    else if (eventType === 'UPDATE'){
+        try {
+            const response = await axios({
+                method: 'PATCH',
+                url: 'https://hospitalepay.herokuapp.com/api/v1/users/change-patient-infos',
+                data
+            })
+
+            return response;
+        } catch (error) {
+            return error;
+        }   
+    }
+    // console.log(response.message)
+
+
+
+};
